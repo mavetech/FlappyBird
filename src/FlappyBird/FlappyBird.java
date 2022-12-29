@@ -102,6 +102,9 @@ public class FlappyBird implements ActionListener, MouseListener {
         if(gameOver){
             g.drawString("Game Over", 100, HEIGHT/2 - 50);
         }
+        if(!gameOver && started){
+            g.drawString("Score: "+ score, WIDTH/2 - 200, 100);
+        }
     }
 
     @Override
@@ -128,6 +131,9 @@ public class FlappyBird implements ActionListener, MouseListener {
             }
             bird.y += yMotion;
             for(Rectangle column :columns){
+                if(bird.x  + bird.width/2 > column.x + column.width/2 - 10 && bird.x + bird.width/2 < column.x + column.width/2 + 10){
+                    score++;
+                }
                 if(column.intersects(bird)){
                     gameOver = true;
                     bird.x = column.x - bird.width;
