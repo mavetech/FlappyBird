@@ -4,7 +4,6 @@ import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.ImageObserver;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -74,21 +73,25 @@ public class FlappyBird implements ActionListener, MouseListener, KeyListener {
 
         // for start add obstacles with x and y coordinates outside the Frame
         // the starting obstacles are subsequently moved into the frame
+        // columns are created for start == flase when a columns disappers to the left of the frame from the viewer
         if(start){
             columns.add(new Rectangle(WIDTH + width + columns.size() * 300, HEIGHT - height - (120 + IMAGE_SIZE), width, height));
-            columns.add(new Rectangle(WIDTH + width + (columns.size() -1)*300, 0, width, HEIGHT - height - space));
+            columns.add(new Rectangle(WIDTH + width + (columns.size() -1) * 300, 0, width, HEIGHT - height - space));
         }
         else{
             columns.add(new Rectangle(columns.get(columns.size() - 1).x + 600, HEIGHT - height - (120 + IMAGE_SIZE), width, height));
-            columns.add(new Rectangle(columns.get(columns.size() - 1).x + 1, 0, width, HEIGHT - height - space));
+            columns.add(new Rectangle(columns.get(columns.size() - 1).x, 0, width, HEIGHT - height - space));
 
         }
 
     }
+
     public void paintColumn(Graphics g, Rectangle column){
         g.setColor(Color.green.darker());
         g.fillRect(column.x, column.y, column.width, column.height);
     }
+
+    // draw the frame with background, scene, bird and obstacles
     public void repaint(Graphics g) {
 
         g.setColor(Color.cyan);
@@ -102,13 +105,15 @@ public class FlappyBird implements ActionListener, MouseListener, KeyListener {
 
         g.setColor(Color.red);
         g.drawImage(image.getImage(), bird.x, bird.y, IMAGE_SIZE, IMAGE_SIZE, (img, infoflags, x, y, width, height) -> true);
-        //g.fillRect(bird.x, bird.y, bird.width, bird.height);
 
+        // to draw columns in the scene
         for(Rectangle column: columns){
             paintColumn(g, column);
         }
+
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", 1, 100));
+
         if(!gameOver && !started){
             g.drawString("Click to start", 75, HEIGHT/2 - 50);
         }
@@ -120,8 +125,10 @@ public class FlappyBird implements ActionListener, MouseListener, KeyListener {
         }
     }
 
+
     @Override
     public void actionPerformed(ActionEvent e) {
+
         int speed = 10;
 
         ticks++;
