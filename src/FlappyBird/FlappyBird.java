@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.ImageObserver;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -26,10 +27,15 @@ public class FlappyBird implements ActionListener, MouseListener, KeyListener {
 
     public int ticks, yMotion, score;
 
+    public ImageIcon image;
+
+    private final static int IMAGE_SIZE = 50;
+
     public FlappyBird(){
         JFrame jframe = new JFrame();
         Timer timer = new Timer(20, this);
 
+        image = new ImageIcon(getClass().getResource("./static/flappybird.png"));
         renderer = new Renderer();
         rand = new Random();
         jframe.add(renderer);
@@ -41,9 +47,11 @@ public class FlappyBird implements ActionListener, MouseListener, KeyListener {
         jframe.addMouseListener(this);
         jframe.addKeyListener(this);
 
-        bird = new Rectangle(WIDTH/2 - 10, HEIGHT/2 - 10, 20, 20);
+        // Initial Position of Bird
+        bird = new Rectangle(WIDTH/2 - 10, HEIGHT/2 - 10, IMAGE_SIZE, IMAGE_SIZE);
         columns = new ArrayList<>();
 
+        // create rectangle obstacles to the ArrayList
         addColumn(true);
         addColumn(true);
         addColumn(true);
@@ -57,17 +65,22 @@ public class FlappyBird implements ActionListener, MouseListener, KeyListener {
 
 
     public void addColumn(boolean start){
+        // space between the obstacles
         int space = 300;
+        // width of the obstacles
         int width = 100;
+        // random height of the obstacles
         int height = 50 + rand.nextInt(300);
 
+        // for start add obstacles with x and y coordinates outside the Frame
+        // the starting obstacles are subsequently moved into the frame
         if(start){
-            columns.add(new Rectangle(WIDTH + width + columns.size() * 300, HEIGHT - height - 150, width, height));
+            columns.add(new Rectangle(WIDTH + width + columns.size() * 300, HEIGHT - height - (120 + IMAGE_SIZE), width, height));
             columns.add(new Rectangle(WIDTH + width + (columns.size() -1)*300, 0, width, HEIGHT - height - space));
         }
         else{
-            columns.add(new Rectangle(columns.get(columns.size() - 1).x + 600, HEIGHT - height - 150, width, height));
-            columns.add(new Rectangle(columns.get(columns.size() - 1).x, 0, width, HEIGHT - height - space));
+            columns.add(new Rectangle(columns.get(columns.size() - 1).x + 600, HEIGHT - height - (120 + IMAGE_SIZE), width, height));
+            columns.add(new Rectangle(columns.get(columns.size() - 1).x + 1, 0, width, HEIGHT - height - space));
 
         }
 
@@ -77,17 +90,19 @@ public class FlappyBird implements ActionListener, MouseListener, KeyListener {
         g.fillRect(column.x, column.y, column.width, column.height);
     }
     public void repaint(Graphics g) {
+
         g.setColor(Color.cyan);
         g.fillRect(0,0 , WIDTH, HEIGHT);
 
         g.setColor(Color.orange);
-        g.fillRect(0,HEIGHT - 150, WIDTH, 150);
+        g.fillRect(0,HEIGHT - (120 + IMAGE_SIZE), WIDTH, (120 + IMAGE_SIZE));
 
         g.setColor(Color.green);
-        g.fillRect(0,HEIGHT - 150, WIDTH, 20);
+        g.fillRect(0,HEIGHT - (120 + IMAGE_SIZE), WIDTH, 20);
 
         g.setColor(Color.red);
-        g.fillRect(bird.x, bird.y, bird.width, bird.height);
+        g.drawImage(image.getImage(), bird.x, bird.y, IMAGE_SIZE, IMAGE_SIZE, (img, infoflags, x, y, width, height) -> true);
+        //g.fillRect(bird.x, bird.y, bird.width, bird.height);
 
         for(Rectangle column: columns){
             paintColumn(g, column);
@@ -148,11 +163,11 @@ public class FlappyBird implements ActionListener, MouseListener, KeyListener {
                 }
             }
 
-            if(bird.y > HEIGHT - 150 - bird.height || bird.y < 0){
+            if(bird.y > HEIGHT - (150 + IMAGE_SIZE) - bird.height || bird.y < 0){
                 gameOver = true;
             }
-            if(bird.y + yMotion >= HEIGHT - 150){
-                bird.y = HEIGHT - 150 - bird.height;
+            if(bird.y + yMotion >= HEIGHT - (150 + IMAGE_SIZE)){
+                bird.y = HEIGHT - (150 + IMAGE_SIZE) - bird.height;
             }
         }
         renderer.repaint();
