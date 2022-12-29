@@ -5,10 +5,12 @@ import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class FlappyBird implements ActionListener {
+public class FlappyBird implements ActionListener, MouseListener {
 
     
     public static FlappyBird flappyBird;
@@ -23,9 +25,9 @@ public class FlappyBird implements ActionListener {
 
     public Random rand;
 
-    public boolean gameOver, started = true;
+    public boolean gameOver, started = false;
 
-    public int ticks, yMotion;
+    public int ticks, yMotion, score;
 
     public FlappyBird(){
         JFrame jframe = new JFrame();
@@ -39,14 +41,15 @@ public class FlappyBird implements ActionListener {
         jframe.setSize(WIDTH, HEIGHT);
         jframe.setVisible(true);
         jframe.setResizable(false);
+        jframe.addMouseListener(this);
 
         bird = new Rectangle(WIDTH/2 - 10, HEIGHT/2 - 10, 20, 20);
         columns = new ArrayList<>();
 
         addColumn(true);
-        addColumn(false);
-        addColumn(false);
-        addColumn(false);
+        addColumn(true);
+        addColumn(true);
+        addColumn(true);
 
         timer.start();
     }
@@ -93,6 +96,9 @@ public class FlappyBird implements ActionListener {
         }
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", 1, 100));
+        if(!gameOver && !started){
+            g.drawString("Click to start", 75, HEIGHT/2 - 50);
+        }
         if(gameOver){
             g.drawString("Game Over", 100, HEIGHT/2 - 50);
         }
@@ -136,5 +142,53 @@ public class FlappyBird implements ActionListener {
             }
         }
         renderer.repaint();
+    }
+
+    private void jump() {
+        if(gameOver){
+            bird = new Rectangle(WIDTH/2 - 10, HEIGHT/2 - 10, 20, 20);
+            columns.clear();
+            yMotion = 0;
+            score = 0;
+            addColumn(true);
+            addColumn(true);
+            addColumn(true);
+            addColumn(true);
+            gameOver = false;
+        }
+        if(!started){
+            started = true;
+        }
+        else {
+            if(yMotion > 0){
+                yMotion = 0;
+            }
+            yMotion -= 10;
+        }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        jump();
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
     }
 }
