@@ -15,9 +15,12 @@ public class FlappyBird implements ActionListener {
 
     public Renderer renderer;
 
+    public Rectangle bird;
+
     public FlappyBird(){
         JFrame jframe = new JFrame();
         Timer timer = new Timer(20, this);
+
         renderer = new Renderer();
 
         jframe.add(renderer);
@@ -25,6 +28,8 @@ public class FlappyBird implements ActionListener {
         jframe.setSize(WIDTH, HEIGHT);
         jframe.setVisible(true);
         jframe.setResizable(false);
+
+        bird = new Rectangle(WIDTH/2 - 10, HEIGHT/2 - 10, 20, 20);
         timer.start();
     }
     public static void main(String[] args){
@@ -32,7 +37,8 @@ public class FlappyBird implements ActionListener {
     }
 
     public void repaint(Graphics g) {
-        System.out.println("hello");
+        g.setColor(Color.cyan);
+        g.fillRect(0,0 , WIDTH, HEIGHT);
     }
 
     @Override
