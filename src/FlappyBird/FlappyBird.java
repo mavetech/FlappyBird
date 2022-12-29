@@ -39,6 +39,13 @@ public class FlappyBird implements ActionListener {
     public void repaint(Graphics g) {
         g.setColor(Color.cyan);
         g.fillRect(0,0 , WIDTH, HEIGHT);
+
+        g.setColor(Color.orange);
+        g.fillRect(0,HEIGHT - 150, WIDTH, 150);
+
+        g.setColor(Color.green);
+        g.fillRect(0,HEIGHT - 150, WIDTH, 20);
+
         g.setColor(Color.red);
         g.fillRect(bird.x, bird.y, bird.width, bird.height);
     }
