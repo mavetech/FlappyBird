@@ -94,7 +94,7 @@ public class FlappyBird implements ActionListener {
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", 1, 100));
         if(gameOver){
-            g.drawString("Game Over", 75, HEIGHT/2 - 50);
+            g.drawString("Game Over", 100, HEIGHT/2 - 50);
         }
     }
 
@@ -124,11 +124,15 @@ public class FlappyBird implements ActionListener {
             for(Rectangle column :columns){
                 if(column.intersects(bird)){
                     gameOver = true;
+                    bird.x = column.x - bird.width;
                 }
             }
 
-            if(bird.y > HEIGHT || bird.y < 0){
+            if(bird.y > HEIGHT - 140 || bird.y < 0){
                 gameOver = true;
+            }
+            if(gameOver){
+                bird.y = HEIGHT - 140 - bird.height;
             }
         }
         renderer.repaint();
