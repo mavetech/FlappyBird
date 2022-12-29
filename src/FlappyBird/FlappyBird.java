@@ -41,6 +41,11 @@ public class FlappyBird implements ActionListener {
         bird = new Rectangle(WIDTH/2 - 10, HEIGHT/2 - 10, 20, 20);
         columns = new ArrayList<>();
 
+        addColumn(true);
+        addColumn(false);
+        addColumn(false);
+        addColumn(false);
+
         timer.start();
     }
     public static void main(String[] args){
@@ -80,13 +85,33 @@ public class FlappyBird implements ActionListener {
 
         g.setColor(Color.red);
         g.fillRect(bird.x, bird.y, bird.width, bird.height);
+
+        for(Rectangle column: columns){
+            paintColumn(g, column);
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        int speed = 10;
+
         ticks++;
+
+        for (Rectangle column : columns) {
+            column.x -= speed;
+        }
         if(ticks % 2 == 0 && yMotion<15){
             yMotion += 2;
+        }
+        for(int i=0;i<columns.size();i++){
+            Rectangle column = columns.get(i);
+            if(column.x + column.width < 0){
+                columns.remove(column);
+                if(column.y == 0){
+                    addColumn(false);
+                }
+
+            }
         }
         bird.y += yMotion;
         renderer.repaint();
