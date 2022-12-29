@@ -64,11 +64,11 @@ public class FlappyBird implements ActionListener, MouseListener {
         int height = 50 + rand.nextInt(300);
 
         if(start){
-            columns.add(new Rectangle(WIDTH + width + columns.size() * 300, HEIGHT - height - 120, width, height));
+            columns.add(new Rectangle(WIDTH + width + columns.size() * 300, HEIGHT - height - 150, width, height));
             columns.add(new Rectangle(WIDTH + width + (columns.size() -1)*300, 0, width, HEIGHT - height - space));
         }
         else{
-            columns.add(new Rectangle(columns.get(columns.size() - 1).x + 600, HEIGHT - height - 120, width, height));
+            columns.add(new Rectangle(columns.get(columns.size() - 1).x + 600, HEIGHT - height - 150, width, height));
             columns.add(new Rectangle(columns.get(columns.size() - 1).x, 0, width, HEIGHT - height - space));
 
         }
@@ -134,11 +134,11 @@ public class FlappyBird implements ActionListener, MouseListener {
                 }
             }
 
-            if(bird.y > HEIGHT - 140 || bird.y < 0){
+            if(bird.y > HEIGHT - 150 || bird.y < 0){
                 gameOver = true;
             }
-            if(gameOver){
-                bird.y = HEIGHT - 140 - bird.height;
+            if(bird.y + yMotion >= HEIGHT - 150){
+                bird.y = HEIGHT - 150 - bird.height;
             }
         }
         renderer.repaint();
