@@ -23,6 +23,8 @@ public class FlappyBird implements ActionListener {
 
     public Random rand;
 
+    public boolean gameOver, started = true;
+
     public int ticks, yMotion;
 
     public FlappyBird(){
@@ -89,6 +91,11 @@ public class FlappyBird implements ActionListener {
         for(Rectangle column: columns){
             paintColumn(g, column);
         }
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", 1, 100));
+        if(gameOver){
+            g.drawString("Game Over", 75, HEIGHT/2 - 50);
+        }
     }
 
     @Override
@@ -96,24 +103,34 @@ public class FlappyBird implements ActionListener {
         int speed = 10;
 
         ticks++;
+        if(started){
+            for (Rectangle column : columns) {
+                column.x -= speed;
+            }
+            if(ticks % 2 == 0 && yMotion<15){
+                yMotion += 2;
+            }
+            for(int i=0;i<columns.size();i++){
+                Rectangle column = columns.get(i);
+                if(column.x + column.width < 0){
+                    columns.remove(column);
+                    if(column.y == 0){
+                        addColumn(false);
+                    }
 
-        for (Rectangle column : columns) {
-            column.x -= speed;
-        }
-        if(ticks % 2 == 0 && yMotion<15){
-            yMotion += 2;
-        }
-        for(int i=0;i<columns.size();i++){
-            Rectangle column = columns.get(i);
-            if(column.x + column.width < 0){
-                columns.remove(column);
-                if(column.y == 0){
-                    addColumn(false);
                 }
+            }
+            bird.y += yMotion;
+            for(Rectangle column :columns){
+                if(column.intersects(bird)){
+                    gameOver = true;
+                }
+            }
 
+            if(bird.y > HEIGHT || bird.y < 0){
+                gameOver = true;
             }
         }
-        bird.y += yMotion;
         renderer.repaint();
     }
 }
