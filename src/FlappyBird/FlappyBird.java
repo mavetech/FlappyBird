@@ -3,14 +3,11 @@ package src.FlappyBird;
 import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class FlappyBird implements ActionListener, MouseListener {
+public class FlappyBird implements ActionListener, MouseListener, KeyListener {
 
     
     public static FlappyBird flappyBird;
@@ -42,6 +39,7 @@ public class FlappyBird implements ActionListener, MouseListener {
         jframe.setVisible(true);
         jframe.setResizable(false);
         jframe.addMouseListener(this);
+        jframe.addKeyListener(this);
 
         bird = new Rectangle(WIDTH/2 - 10, HEIGHT/2 - 10, 20, 20);
         columns = new ArrayList<>();
@@ -131,16 +129,26 @@ public class FlappyBird implements ActionListener, MouseListener {
             }
             bird.y += yMotion;
             for(Rectangle column :columns){
-                if(bird.x  + bird.width/2 > column.x + column.width/2 - 10 && bird.x + bird.width/2 < column.x + column.width/2 + 10){
+                if(column.y == 0 && bird.x + bird.width/2 > column.x + column.width/2 - 10 && bird.x + bird.width/2 < column.x + column.width/2 + 10){
                     score++;
                 }
                 if(column.intersects(bird)){
                     gameOver = true;
-                    bird.x = column.x - bird.width;
+                    if(bird.x <= column.x){
+                        bird.x = column.x - bird.width;
+                    }
+                    else{
+                        if(column.y != 0){
+                            bird.y = column.y - bird.height;
+                        }
+                        else if(bird.y < column.height){
+                            bird.y = column.height;
+                        }
+                    }
                 }
             }
 
-            if(bird.y > HEIGHT - 150 || bird.y < 0){
+            if(bird.y > HEIGHT - 150 - bird.height || bird.y < 0){
                 gameOver = true;
             }
             if(bird.y + yMotion >= HEIGHT - 150){
@@ -196,5 +204,22 @@ public class FlappyBird implements ActionListener, MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
 
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if(e.getKeyCode() == KeyEvent.VK_SPACE){
+            jump();
+        }
     }
 }
